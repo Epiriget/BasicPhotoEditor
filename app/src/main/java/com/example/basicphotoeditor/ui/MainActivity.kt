@@ -3,15 +3,17 @@ package com.example.basicphotoeditor.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import com.example.basicphotoeditor.R
+import com.example.basicphotoeditor.data.PostsRepository
 import com.example.basicphotoeditor.service.HabrApi
 import com.example.basicphotoeditor.service.getRetrofit
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
     private val disposables = CompositeDisposable()
@@ -19,22 +21,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fetchHabrList(getRetrofit())
-
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, PostsListFragment.getInstance())
+            .commit()
     }
 
-    fun fetchHabrList(api: HabrApi) {
-        disposables.add(
-            api.getChannel()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        Log.d("Retrofit", it.channel.items.size.toString())
-                    },
-                    {
-                        Log.d("Retrofit", it.message.toString())
-                    })
-        )
-    }
 }
