@@ -5,13 +5,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.basicphotoeditor.domain.Post
 
 @Entity(tableName = "posts")
 data class PostEntity (
-    @PrimaryKey(autoGenerate = true)
-    var id: Int,
-
+    @PrimaryKey(autoGenerate = false)
+    var id: String,
 
     // Todo: implement another format of image
     @ColumnInfo(name ="image")

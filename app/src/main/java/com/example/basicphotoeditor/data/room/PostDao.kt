@@ -9,8 +9,8 @@ import io.reactivex.Single
 
 @Dao
 interface PostDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertPosts(vararg posts: PostEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPosts(posts: List<PostEntity>)
 
     @Query("SELECT * FROM posts")
     fun getPosts(): Flowable<List<PostEntity>>

@@ -11,14 +11,11 @@ import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.PostListPresenter
 import com.example.basicphotoeditor.domain.PostListPresenterContract
-import com.example.basicphotoeditor.domain.PresenterBase
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 
 /**
  * A simple [Fragment] subclass.
  */
-class PostsListFragment : Fragment(), PostListView {
+class PostsListFragment : Fragment(), PostListViewContract {
     // Todo: change to di
     private lateinit var presenter: PostListPresenterContract
     private var layout: View? = null
@@ -34,8 +31,11 @@ class PostsListFragment : Fragment(), PostListView {
     ): View? {
         layout = inflater.inflate(R.layout.fragment_posts_list, container, false)
         textView = layout?.findViewById(R.id.frag_textview)
+
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
+        presenter.supportPosts()
+
         return layout
     }
 
