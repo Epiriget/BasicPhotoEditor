@@ -16,8 +16,8 @@ interface PostDao {
     @Query("SELECT * FROM posts")
     fun getPosts(): Flowable<List<PostEntity>>
 
-    @Query("SELECT * FROM posts")
-    fun getStreamPosts(/*position:Int, loadSize: Int*/): List<PostEntity>
+    @Query("SELECT * FROM posts LIMIT :loadSize OFFSET :position")
+    suspend fun getStreamPosts(position:Int, loadSize: Int): List<PostEntity>
 
     @Query("DELETE FROM posts")
     fun deletePosts()

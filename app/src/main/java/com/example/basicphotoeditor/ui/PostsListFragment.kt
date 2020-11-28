@@ -15,6 +15,8 @@ import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.PostListPresenter
 import com.example.basicphotoeditor.domain.PostListPresenterContract
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -51,6 +53,7 @@ class PostsListFragment : Fragment(), PostListViewContract {
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
         presenter.supportStreamPosts()
+//        presenter.supportPosts()
 
         return layout
     }
@@ -61,9 +64,13 @@ class PostsListFragment : Fragment(), PostListViewContract {
 //        adapter.submitList(posts)
     }
 
-    override fun showStreamPosts(posts: PagingData<PostEntity>) {
-        lifecycleScope.launch {
-            adapter.submitData(posts)
+    override fun showStreamPosts(posts: Flow<PagingData<PostEntity>>) {
+        textView?.text = posts.toString()
+        list?.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            posts.collectLatest {
+                adapter.submitData(it)
+            }
         }
     }
 

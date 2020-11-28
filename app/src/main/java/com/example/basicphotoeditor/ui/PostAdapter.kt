@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.data.room.PostEntity
-
+//PagingDataAdapter
 class PostAdapter: PagingDataAdapter<PostEntity, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PostViewHolder.create(parent)
@@ -18,6 +18,8 @@ class PostAdapter: PagingDataAdapter<PostEntity, RecyclerView.ViewHolder>(POST_C
             (holder as PostViewHolder).bind(postItem)
         }
     }
+
+
 
     companion object {
         private val POST_COMPARATOR = object : DiffUtil.ItemCallback<PostEntity>() {
