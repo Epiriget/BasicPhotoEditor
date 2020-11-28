@@ -1,7 +1,6 @@
-package com.example.basicphotoeditor.domain
+package com.example.basicphotoeditor.presenter
 
 import com.example.basicphotoeditor.ui.PostListViewContract
-import com.example.basicphotoeditor.ui.ViewContract
 
 // Todo: implement wildcard like in java: <V extends MvpView>
 interface PresenterContract<V> {

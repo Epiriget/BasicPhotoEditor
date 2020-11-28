@@ -8,15 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
-import com.example.basicphotoeditor.domain.PostListPresenter
-import com.example.basicphotoeditor.domain.PostListPresenterContract
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import com.example.basicphotoeditor.presenter.PostListPresenter
+import com.example.basicphotoeditor.presenter.PostListPresenterContract
 import kotlinx.coroutines.launch
 
 
@@ -64,13 +61,16 @@ class PostsListFragment : Fragment(), PostListViewContract {
 //        adapter.submitList(posts)
     }
 
-    override fun showStreamPosts(posts: Flow<PagingData<PostEntity>>) {
+    override fun showStreamPosts(posts: PagingData<PostEntity>) {
         textView?.text = posts.toString()
         list?.adapter = adapter
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            posts.collectLatest {
+//                adapter.submitData(it)
+//            }
+//        }
         viewLifecycleOwner.lifecycleScope.launch {
-            posts.collectLatest {
-                adapter.submitData(it)
-            }
+            adapter.submitData(posts)
         }
     }
 

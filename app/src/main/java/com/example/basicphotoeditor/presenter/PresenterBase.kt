@@ -1,4 +1,4 @@
-package com.example.basicphotoeditor.domain
+package com.example.basicphotoeditor.presenter
 
 abstract class PresenterBase<T>: PresenterContract<T> {
     var view: T? = null

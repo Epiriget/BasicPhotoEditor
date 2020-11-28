@@ -34,11 +34,11 @@ class PostsRepository(application: Application) {
 
 
     // Todo: add parameters to dao.getStreamPosts and change db query
-    fun getPage(): Flow<PagingData<PostEntity>> {
+    fun getPage(): Flowable<PagingData<PostEntity>> {
         return Pager(
             config = PagingConfig(DATABASE_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { PostPagingSource(database) }
-        ).flow//.cachedIn(MainScope())
+        ).flowable
     }
 
     private fun initDatabase() {
