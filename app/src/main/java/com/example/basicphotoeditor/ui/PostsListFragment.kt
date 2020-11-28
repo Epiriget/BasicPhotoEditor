@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
+import com.example.basicphotoeditor.domain.FilterTransformation
 import com.example.basicphotoeditor.presenter.PostListPresenter
 import com.example.basicphotoeditor.presenter.PostListPresenterContract
 import kotlinx.coroutines.launch
@@ -29,6 +31,10 @@ class PostsListFragment : Fragment(), PostListViewContract {
 
     private val adapter = PostAdapter()
 
+    private var filter1: Button? = null
+    private var filter2: Button? = null
+    private var filter3: Button? = null
+
     companion object {
         fun getInstance(): PostsListFragment = PostsListFragment()
     }
@@ -41,6 +47,10 @@ class PostsListFragment : Fragment(), PostListViewContract {
         textView = layout?.findViewById(R.id.frag_textview)
         list = layout?.findViewById(R.id.list)
 
+        filter1 = layout?.findViewById(R.id.filter1_button)
+        filter2 = layout?.findViewById(R.id.filter2_button)
+        filter3 = layout?.findViewById(R.id.filter3_button)
+
         val recyclerLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerLayoutManager.scrollToPosition(0)
@@ -50,6 +60,8 @@ class PostsListFragment : Fragment(), PostListViewContract {
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
         presenter.supportStreamPosts()
+
+        dispatchFilters()
 //        presenter.supportPosts()
 
         return layout
@@ -72,6 +84,13 @@ class PostsListFragment : Fragment(), PostListViewContract {
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.submitData(posts)
         }
+    }
+
+
+    private fun dispatchFilters() {
+        filter1?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.GREY }
+        filter2?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.SEPIA }
+        filter3?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.NONE  }
     }
 
     override fun onDestroy() {

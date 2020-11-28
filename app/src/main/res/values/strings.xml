@@ -3,5 +3,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="filter_button">Stab filter</string>
+    <string name="filter1_button">GREY</string>
+    <string name="post_image_placeholder">Post image</string>
+    <string name="filter2_button">SEPIA</string>
+    <string name="filter3_button">BLUR</string>
 </resources>

@@ -25,4 +25,8 @@ class PostPagingSource (private val database: PostRoomDatabase
             nextKey = if(response.isEmpty()) null else position + 1
         )
     }
+
+    fun setFilter() {
+
+    }
 }

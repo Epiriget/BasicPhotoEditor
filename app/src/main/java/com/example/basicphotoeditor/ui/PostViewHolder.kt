@@ -5,16 +5,21 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
+import com.example.basicphotoeditor.domain.FilterTransformation
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.post_view_item.view.*
 
-class PostViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    private val title = view.findViewById<TextView>(R.id.post_title)
-    private val image = view.findViewById<TextView>(R.id.post_image)
-    private val source = view.findViewById<TextView>(R.id.post_source)
+class PostViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+//    private val title = view.findViewById<TextView>(R.id.post_title)
+//    private val imageUrl = view.findViewById<TextView>(R.id.post_image_url)
+    private val image = view.findViewById<ImageView>(R.id.post_image)
+//    private val source = view.findViewById<TextView>(R.id.post_source)
 
     private var post: PostEntity? = null
 
@@ -28,9 +33,20 @@ class PostViewHolder(view: View): RecyclerView.ViewHolder(view) {
     }
 
     fun bind(post: PostEntity?) {
-        title.text = post?.title
-        image.text = post?.image
-        source.text = post?.source
+//        Glide.with(view.context)
+//            .load(post?.image)
+//            .placeholder(R.drawable.ic_photo_placeholder)
+//            .into(image)
+        Picasso.get()
+            .load(post?.image)
+            .placeholder(R.drawable.ic_photo_placeholder)
+            .resize(200, 200)
+            .centerCrop()
+            .transform(FilterTransformation(FilterTransformation.Filter.GREY))
+            .into(image)
+//        title.text = post?.title
+//        imageUrl.text = post?.image
+//        source.text = post?.source
     }
 
     companion object {
