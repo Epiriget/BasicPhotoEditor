@@ -1,12 +1,13 @@
 package com.example.basicphotoeditor.ui
 
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.data.room.PostEntity
 
-class PostAdapter: ListAdapter<PostEntity, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+class PostAdapter: PagingDataAdapter<PostEntity, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PostViewHolder.create(parent)
     }

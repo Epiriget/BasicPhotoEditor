@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.PostListPresenter
 import com.example.basicphotoeditor.domain.PostListPresenterContract
+import kotlinx.coroutines.launch
 
 
 /**
@@ -46,17 +50,22 @@ class PostsListFragment : Fragment(), PostListViewContract {
 
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
-        presenter.supportPosts()
+        presenter.supportStreamPosts()
 
         return layout
     }
 
     override fun showPosts(posts: List<PostEntity>) {
-        textView?.text = posts.size.toString()
-        list?.adapter = adapter
-        adapter.submitList(posts)
+//        textView?.text = posts.size.toString()
+//        list?.adapter = adapter
+//        adapter.submitList(posts)
     }
 
+    override fun showStreamPosts(posts: PagingData<PostEntity>) {
+        lifecycleScope.launch {
+            adapter.submitData(posts)
+        }
+    }
 
     override fun onDestroy() {
         presenter.detachView()

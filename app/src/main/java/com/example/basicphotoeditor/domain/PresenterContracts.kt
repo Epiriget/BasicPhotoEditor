@@ -16,5 +16,6 @@ interface PresenterContract<V> {
 
 interface PostListPresenterContract: PresenterContract<PostListViewContract> {
     fun supportPosts()
+    fun supportStreamPosts()
 }
 

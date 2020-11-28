@@ -2,6 +2,12 @@ package com.example.basicphotoeditor.data
 
 import android.app.Application
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.rxjava2.flowable
+import com.example.basicphotoeditor.data.pagination.PostPagingSource
 import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.data.room.PostRoomDatabase
 import com.example.basicphotoeditor.service.LentaRss
@@ -19,10 +25,20 @@ class PostsRepository(application: Application) {
 
     companion object {
         private const val LENTA_SOURCE_NAME = "lenta.ru"
+        private const val DATABASE_PAGE_SIZE = 20
     }
 
     fun getPosts(): Flowable<List<PostEntity>> {
         return dao.getPosts()
+    }
+
+
+    // Todo: add parameters to dao.getStreamPosts and change db query
+    fun getPage(): Flowable<PagingData<PostEntity>> {
+        return Pager(
+            config = PagingConfig(DATABASE_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { PostPagingSource(database) }
+        ).flowable
     }
 
     private fun initDatabase() {

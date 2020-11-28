@@ -1,5 +1,6 @@
 package com.example.basicphotoeditor.data.room
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,6 +15,9 @@ interface PostDao {
 
     @Query("SELECT * FROM posts")
     fun getPosts(): Flowable<List<PostEntity>>
+
+    @Query("SELECT * FROM posts")
+    fun getStreamPosts(/*position:Int, loadSize: Int*/): List<PostEntity>
 
     @Query("DELETE FROM posts")
     fun deletePosts()

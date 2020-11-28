@@ -23,6 +23,14 @@ class PostListPresenter(application: Application):  PostListPresenterContract {
         )
     }
 
+    override fun supportStreamPosts() {
+        disposables.add(repository.getPage()
+            .subscribe {
+                view?.showStreamPosts(it)
+            }
+        )
+    }
+
     override fun destroy() {
         disposables.dispose()
     }
