@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
-import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.FilterTransformation
 import com.example.basicphotoeditor.domain.Post
 import com.example.basicphotoeditor.presenter.PostListPresenter
 import com.example.basicphotoeditor.presenter.PostListPresenterContract
+import kotlinx.android.synthetic.main.posts_load_state_footer_view_item.*
 import kotlinx.coroutines.launch
 
 
@@ -36,6 +40,9 @@ class PostsListFragment : Fragment(), PostListViewContract {
     private var filter3: Button? = null
     private var filter4: Button? = null
 
+    private var listRetryButton: Button? = null
+    private var listProgressBar: ProgressBar? = null
+
     companion object {
         fun getInstance(): PostsListFragment = PostsListFragment()
     }
@@ -51,9 +58,11 @@ class PostsListFragment : Fragment(), PostListViewContract {
         filter2 = layout?.findViewById(R.id.filter2_button)
         filter3 = layout?.findViewById(R.id.filter3_button)
         filter4 = layout?.findViewById(R.id.filter4_button)
+        listRetryButton = layout?.findViewById(R.id.list_retry_button)
+        listProgressBar = layout?.findViewById(R.id.list_progress_bar)
+        listRetryButton?.setOnClickListener { adapter.retry() }
 
-
-        initAdapter()
+        initRecyclerView()
 
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
@@ -64,15 +73,33 @@ class PostsListFragment : Fragment(), PostListViewContract {
         return layout
     }
 
-    private fun initAdapter() {
+    private fun initRecyclerView() {
         val recyclerLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerLayoutManager.scrollToPosition(0)
         list?.layoutManager = recyclerLayoutManager
+
         list?.adapter = adapter.withLoadStateHeaderAndFooter(
             header = PostLoadStateAdapter { adapter.retry() },
             footer = PostLoadStateAdapter { adapter.retry() }
         )
+        adapter.addLoadStateListener { loadState ->
+            list?.isVisible = loadState.source.refresh is LoadState.NotLoading
+            listProgressBar?.isVisible = loadState.source.refresh is LoadState.Loading
+            listRetryButton?.isVisible = loadState.source.refresh is LoadState.Error
+
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+                Toast.makeText(
+                    this.context,
+                    "\uD83D\uDE28 Wooops ${it.error}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun showStreamPosts(posts: PagingData<Post>) {
