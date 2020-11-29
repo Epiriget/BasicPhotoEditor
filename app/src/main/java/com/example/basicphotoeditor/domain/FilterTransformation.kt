@@ -1,34 +1,9 @@
 package com.example.basicphotoeditor.domain
 
-import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.graphics.set
-import androidx.paging.PagingData
-import androidx.paging.map
-import com.bumptech.glide.Glide
-import com.example.basicphotoeditor.data.room.PostEntity
 import com.squareup.picasso.Transformation
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
-
-class PhotoEditorUseCase(val application: Application) {
-    fun convert(posts: Flowable<PagingData<PostEntity>>, filter: String) {
-        val disposable = posts
-            .observeOn(Schedulers.io())
-            .map { pager ->
-                pager.map { post ->
-                    val image: Bitmap
-                    Glide.with(application)
-                        .load(post.image)
-                        .asBitmap()
-
-                }
-            }
-    }
-
-}
-
 
 class FilterTransformation(private val filterType: Filter) : Transformation {
 
@@ -52,7 +27,7 @@ class FilterTransformation(private val filterType: Filter) : Transformation {
                     Filter.SEPIA -> toSepia(red, green, blue, alpha)
                     Filter.GREY -> toGrey(red, green, blue, alpha)
                     //Todo implement blur
-                    else -> toGrey(red, green, blue, alpha)
+                    else -> toSketch(red, green, blue, alpha)
                 }
                 source[i, j] = newPixel
             }
@@ -73,16 +48,18 @@ class FilterTransformation(private val filterType: Filter) : Transformation {
         return Color.argb(alpha, newRed, newGreen, newBlue)
     }
 
+    private fun toSketch(red: Int, green: Int, blue: Int, alpha: Int): Int {
+        val intensity: Int = (red + blue + green) / 3
+        // 120 is Intensity factor
+        return when {
+           intensity > 120 -> Color.argb(alpha, 255, 255, 255)
+           intensity > 100 -> Color.argb(alpha, 150, 150, 150)
+            else -> Color.argb(alpha, 0, 0, 0)
+        }
+    }
+
 
     override fun key(): String {
         return filterType.name;
     }
 }
-
-data class Post(
-    var id: String,
-    var imageUrl: String,
-    var image: Bitmap,
-    var title: String,
-    var source: String
-)

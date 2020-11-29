@@ -6,47 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.basicphotoeditor.R
-import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.FilterTransformation
+import com.example.basicphotoeditor.domain.Post
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.post_view_item.view.*
 
-class PostViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+class PostViewHolder(view: View): RecyclerView.ViewHolder(view) {
 //    private val title = view.findViewById<TextView>(R.id.post_title)
 //    private val imageUrl = view.findViewById<TextView>(R.id.post_image_url)
     private val image = view.findViewById<ImageView>(R.id.post_image)
 //    private val source = view.findViewById<TextView>(R.id.post_source)
 
-    private var post: PostEntity? = null
 
-    init {
-        view.setOnClickListener {
-            post?.id?.let {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                view.context.startActivity(intent)
-            }
+
+    fun bind(post: Post?) {
+        post?.let {
+            Picasso.get()
+                .load(it.imageUrl)
+                .resize(200, 200)
+                .placeholder(R.drawable.ic_photo_placeholder)
+                .centerCrop()
+                .transform(FilterTransformation(it.filter))
+                .into(image)
         }
-    }
-
-    fun bind(post: PostEntity?) {
-//        Glide.with(view.context)
-//            .load(post?.image)
-//            .placeholder(R.drawable.ic_photo_placeholder)
-//            .into(image)
-        Picasso.get()
-            .load(post?.image)
-            .placeholder(R.drawable.ic_photo_placeholder)
-            .resize(200, 200)
-            .centerCrop()
-            .transform(FilterTransformation(FilterTransformation.Filter.GREY))
-            .into(image)
-//        title.text = post?.title
-//        imageUrl.text = post?.image
-//        source.text = post?.source
     }
 
     companion object {

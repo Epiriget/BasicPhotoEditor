@@ -2,12 +2,12 @@ package com.example.basicphotoeditor.ui
 
 import androidx.paging.PagingData
 import com.example.basicphotoeditor.data.room.PostEntity
+import com.example.basicphotoeditor.domain.Post
 import io.reactivex.Flowable
 import kotlinx.coroutines.flow.Flow
 
 interface PostListViewContract: ViewContract {
-    fun showPosts(posts: List<PostEntity>)
-    fun showStreamPosts(posts: PagingData<PostEntity>)
+    fun showStreamPosts(posts: PagingData<Post>)
 }
 
 interface ViewContract {

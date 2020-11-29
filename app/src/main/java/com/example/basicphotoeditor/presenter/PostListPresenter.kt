@@ -1,7 +1,11 @@
 package com.example.basicphotoeditor.presenter
 
 import android.app.Application
+import androidx.paging.PagingData
 import com.example.basicphotoeditor.data.PostsRepository
+import com.example.basicphotoeditor.domain.FilterTransformation
+import com.example.basicphotoeditor.domain.PostUseCase
+import com.example.basicphotoeditor.domain.Post
 import com.example.basicphotoeditor.ui.PostListViewContract
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -13,25 +17,19 @@ class PostListPresenter(application: Application):  PostListPresenterContract {
     private val disposables = CompositeDisposable()
     private var view: PostListViewContract? = null
 
+    private var currentFilter: FilterTransformation.Filter = FilterTransformation.Filter.NONE
+    private var currentPage: PagingData<Post>? = null
 
-    override fun supportPosts() {
-        disposables.add(repository.getPosts()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                view?.showPosts(it)
-            }
-        )
-    }
 
     override fun supportStreamPosts() {
-        disposables.add(repository.getPage()
+        disposables.add(PostUseCase.convert(repository.getPage(), currentFilter)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
+                currentPage = it
                 view?.showStreamPosts(it)
             }
         )
-
     }
 
     override fun destroy() {

@@ -17,9 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/post_image_placeholder" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
     <!--    <TextView-->
     <!--        android:id="@+id/post_title"-->
     <!--        android:layout_width="match_parent"-->
@@ -30,6 +27,20 @@
     <!--        />-->
 
     <!--    <TextView-->
+    <!--        android:id="@+id/post_source"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        tools:text="Source placeholder"-->
+    <!--        />-->
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <TextView-->
     <!--        android:id="@+id/post_image_url"-->
     <!--        android:layout_width="wrap_content"-->
     <!--        android:layout_height="wrap_content"-->
@@ -38,11 +49,3 @@
     <!--        tools:text="Image placeholder"-->
     <!--        />-->
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/post_source"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        tools:text="Source placeholder"-->
-    <!--        />-->

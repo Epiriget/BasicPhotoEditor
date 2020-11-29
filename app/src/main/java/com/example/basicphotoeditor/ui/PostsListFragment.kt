@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.data.room.PostEntity
 import com.example.basicphotoeditor.domain.FilterTransformation
+import com.example.basicphotoeditor.domain.Post
 import com.example.basicphotoeditor.presenter.PostListPresenter
 import com.example.basicphotoeditor.presenter.PostListPresenterContract
 import kotlinx.coroutines.launch
@@ -62,25 +63,13 @@ class PostsListFragment : Fragment(), PostListViewContract {
         presenter.supportStreamPosts()
 
         dispatchFilters()
-//        presenter.supportPosts()
 
         return layout
     }
 
-    override fun showPosts(posts: List<PostEntity>) {
-//        textView?.text = posts.size.toString()
-//        list?.adapter = adapter
-//        adapter.submitList(posts)
-    }
-
-    override fun showStreamPosts(posts: PagingData<PostEntity>) {
+    override fun showStreamPosts(posts: PagingData<Post>) {
         textView?.text = posts.toString()
         list?.adapter = adapter
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            posts.collectLatest {
-//                adapter.submitData(it)
-//            }
-//        }
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.submitData(posts)
         }
@@ -88,10 +77,16 @@ class PostsListFragment : Fragment(), PostListViewContract {
 
 
     private fun dispatchFilters() {
-        filter1?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.GREY }
-        filter2?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.SEPIA }
-        filter3?.setOnClickListener { adapter.currentFilter = FilterTransformation.Filter.NONE  }
+        filter1?.setOnClickListener { updateFilter(FilterTransformation.Filter.GREY) }
+        filter2?.setOnClickListener { updateFilter(FilterTransformation.Filter.SEPIA) }
+        filter3?.setOnClickListener { updateFilter(FilterTransformation.Filter.SKETCH) }
     }
+
+    private fun updateFilter(filter: FilterTransformation.Filter) {
+        adapter.currentFilter = filter;
+        adapter.notifyDataSetChanged()
+    }
+
 
     override fun onDestroy() {
         presenter.detachView()
