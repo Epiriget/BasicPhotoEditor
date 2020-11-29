@@ -25,9 +25,7 @@ import kotlinx.android.synthetic.main.posts_load_state_footer_view_item.*
 import kotlinx.coroutines.launch
 
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class PostsListFragment : Fragment(), PostListViewContract {
     // Todo: change to di
     private lateinit var presenter: PostListPresenterContract

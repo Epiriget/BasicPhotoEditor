@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 
 class PostsLoadStateViewHolder(
-    private val view: View,
+    view: View,
     retry: () -> Unit
 ): RecyclerView.ViewHolder(view) {
     private val retryButton: Button = view.findViewById(R.id.retry_button)

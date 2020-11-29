@@ -12,7 +12,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class PostListPresenter(application: Application):  PostListPresenterContract {
-    // Todo: change to di
     private val repository = PostsRepository(application)
     private val disposables = CompositeDisposable()
     private var view: PostListViewContract? = null
