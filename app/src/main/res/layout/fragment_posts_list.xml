@@ -40,7 +40,7 @@
 
     <LinearLayout
         android:id="@+id/button_layout"
-        style="?android:attr/buttonBarNeutralButtonStyle"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -54,6 +54,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/grey"
+            android:textColor="@color/white"
             android:text="@string/filter1_button"
             tools:ignore="ButtonStyle" />
 
@@ -63,6 +65,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/sepia"
+            android:textColor="@color/white"
             android:text="@string/filter2_button"
             tools:ignore="ButtonStyle" />
 
@@ -72,6 +76,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/smoky_black"
+            android:textColor="@color/white"
             android:text="@string/filter3_button"
             tools:ignore="ButtonStyle" />
 
@@ -81,6 +87,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/crimson"
+            android:textColor="@color/white"
             android:text="@string/filter4_button"
             tools:ignore="ButtonStyle" />
 

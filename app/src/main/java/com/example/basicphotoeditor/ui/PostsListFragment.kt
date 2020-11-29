@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
@@ -78,6 +79,8 @@ class PostsListFragment : Fragment(), PostListViewContract {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerLayoutManager.scrollToPosition(0)
         list?.layoutManager = recyclerLayoutManager
+        val decoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        list?.addItemDecoration(decoration)
 
         list?.adapter = adapter.withLoadStateHeaderAndFooter(
             header = PostLoadStateAdapter { adapter.retry() },
@@ -87,18 +90,6 @@ class PostsListFragment : Fragment(), PostListViewContract {
             list?.isVisible = loadState.source.refresh is LoadState.NotLoading
             listProgressBar?.isVisible = loadState.source.refresh is LoadState.Loading
             listRetryButton?.isVisible = loadState.source.refresh is LoadState.Error
-
-            val errorState = loadState.source.append as? LoadState.Error
-                ?: loadState.source.prepend as? LoadState.Error
-                ?: loadState.append as? LoadState.Error
-                ?: loadState.prepend as? LoadState.Error
-            errorState?.let {
-                Toast.makeText(
-                    this.context,
-                    "\uD83D\uDE28 Wooops ${it.error}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
         }
     }
 
@@ -118,7 +109,7 @@ class PostsListFragment : Fragment(), PostListViewContract {
 
     private fun updateFilter(filter: FilterTransformation.Filter) {
         adapter.currentFilter = filter;
-        adapter.refresh()
+        adapter.notifyDataSetChanged()
     }
 
 

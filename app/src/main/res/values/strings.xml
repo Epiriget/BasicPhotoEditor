@@ -6,7 +6,7 @@
     <string name="filter1_button">GREY</string>
     <string name="post_image_placeholder">Post image</string>
     <string name="filter2_button">SEPIA</string>
-    <string name="filter3_button">BLUR</string>
+    <string name="filter3_button">SCRATCH</string>
     <string name="filter4_button">ORIGINAL</string>
     <string name="retry">Retry</string>
 </resources>
