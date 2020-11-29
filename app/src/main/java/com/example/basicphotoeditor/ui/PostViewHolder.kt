@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.basicphotoeditor.R
 import com.example.basicphotoeditor.domain.FilterTransformation
@@ -13,15 +14,16 @@ import com.example.basicphotoeditor.domain.Post
 import com.squareup.picasso.Picasso
 
 class PostViewHolder(view: View): RecyclerView.ViewHolder(view) {
-//    private val title = view.findViewById<TextView>(R.id.post_title)
-//    private val imageUrl = view.findViewById<TextView>(R.id.post_image_url)
+    private val title = view.findViewById<TextView>(R.id.post_title)
     private val image = view.findViewById<ImageView>(R.id.post_image)
-//    private val source = view.findViewById<TextView>(R.id.post_source)
+    private val source = view.findViewById<TextView>(R.id.post_source)
 
 
 
     fun bind(post: Post?) {
         post?.let {
+            title.text = it.title
+            source.text =it.source
             Picasso.get()
                 .load(it.imageUrl)
                 .resize(200, 200)
@@ -30,6 +32,7 @@ class PostViewHolder(view: View): RecyclerView.ViewHolder(view) {
                 .transform(FilterTransformation(it.filter))
                 .into(image)
         }
+
     }
 
     companion object {

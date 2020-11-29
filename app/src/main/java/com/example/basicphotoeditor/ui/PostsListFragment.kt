@@ -27,7 +27,6 @@ class PostsListFragment : Fragment(), PostListViewContract {
     // Todo: change to di
     private lateinit var presenter: PostListPresenterContract
     private var layout: View? = null
-    private var textView: TextView? = null
     private var list: RecyclerView? = null
 
     private val adapter = PostAdapter()
@@ -35,6 +34,7 @@ class PostsListFragment : Fragment(), PostListViewContract {
     private var filter1: Button? = null
     private var filter2: Button? = null
     private var filter3: Button? = null
+    private var filter4: Button? = null
 
     companion object {
         fun getInstance(): PostsListFragment = PostsListFragment()
@@ -45,18 +45,15 @@ class PostsListFragment : Fragment(), PostListViewContract {
         savedInstanceState: Bundle?
     ): View? {
         layout = inflater.inflate(R.layout.fragment_posts_list, container, false)
-        textView = layout?.findViewById(R.id.frag_textview)
         list = layout?.findViewById(R.id.list)
 
         filter1 = layout?.findViewById(R.id.filter1_button)
         filter2 = layout?.findViewById(R.id.filter2_button)
         filter3 = layout?.findViewById(R.id.filter3_button)
+        filter4 = layout?.findViewById(R.id.filter4_button)
 
-        val recyclerLayoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerLayoutManager.scrollToPosition(0)
-        list?.layoutManager = recyclerLayoutManager
 
+        initAdapter()
 
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
@@ -67,9 +64,18 @@ class PostsListFragment : Fragment(), PostListViewContract {
         return layout
     }
 
+    private fun initAdapter() {
+        val recyclerLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        recyclerLayoutManager.scrollToPosition(0)
+        list?.layoutManager = recyclerLayoutManager
+        list?.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PostLoadStateAdapter { adapter.retry() },
+            footer = PostLoadStateAdapter { adapter.retry() }
+        )
+    }
+
     override fun showStreamPosts(posts: PagingData<Post>) {
-        textView?.text = posts.toString()
-        list?.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.submitData(posts)
         }
@@ -80,11 +86,12 @@ class PostsListFragment : Fragment(), PostListViewContract {
         filter1?.setOnClickListener { updateFilter(FilterTransformation.Filter.GREY) }
         filter2?.setOnClickListener { updateFilter(FilterTransformation.Filter.SEPIA) }
         filter3?.setOnClickListener { updateFilter(FilterTransformation.Filter.SKETCH) }
+        filter4?.setOnClickListener { updateFilter(FilterTransformation.Filter.NONE) }
     }
 
     private fun updateFilter(filter: FilterTransformation.Filter) {
         adapter.currentFilter = filter;
-        adapter.notifyDataSetChanged()
+        adapter.refresh()
     }
 
 

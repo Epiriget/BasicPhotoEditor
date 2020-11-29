@@ -26,7 +26,6 @@ class FilterTransformation(private val filterType: Filter) : Transformation {
                 val newPixel = when(filterType) {
                     Filter.SEPIA -> toSepia(red, green, blue, alpha)
                     Filter.GREY -> toGrey(red, green, blue, alpha)
-                    //Todo implement blur
                     else -> toSketch(red, green, blue, alpha)
                 }
                 source[i, j] = newPixel

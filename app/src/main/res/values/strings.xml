@@ -7,4 +7,5 @@
     <string name="post_image_placeholder">Post image</string>
     <string name="filter2_button">SEPIA</string>
     <string name="filter3_button">BLUR</string>
+    <string name="filter4_button">ORIGINAL</string>
 </resources>
