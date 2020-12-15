@@ -10,7 +10,9 @@ import com.example.basicphotoeditor.data.room.PostRoomDatabase
 import com.example.basicphotoeditor.service.LentaRss
 import com.example.basicphotoeditor.service.LentaService
 import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
 
 class PostsRepository(application: Application) {
     private val database = PostRoomDatabase.getDatabaseInstance(application)
@@ -26,17 +28,17 @@ class PostsRepository(application: Application) {
     }
 
 
-    fun getPage(): Flowable<PagingData<PostEntity>> {
+    fun getPage(): Flow<PagingData<PostEntity>> {
         return Pager(
             config = PagingConfig(DATABASE_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { PostPagingSource(database) }
-        ).flowable
+        ).flow
     }
 
     private fun initDatabase() {
         val api = LentaService.create()
-        val rawPosts = api.getPosts()
-        rawPosts
+
+        api.getPosts()
             .subscribeOn(Schedulers.io())
             .subscribe(
                 {
@@ -46,7 +48,7 @@ class PostsRepository(application: Application) {
                 },
                 {
                     Log.d("Retrofit", it.message.toString())
-                }).dispose()
+                })
     }
 
     private fun convert(rss: LentaRss): List<PostEntity> {

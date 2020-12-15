@@ -10,6 +10,7 @@ import com.example.basicphotoeditor.ui.PostListViewContract
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.collectLatest
 
 class PostListPresenter(application: Application):  PostListPresenterContract {
     private val repository = PostsRepository(application)
@@ -20,15 +21,20 @@ class PostListPresenter(application: Application):  PostListPresenterContract {
     private var currentPage: PagingData<Post>? = null
 
 
-    override fun supportStreamPosts() {
-        disposables.add(PostUseCase.convert(repository.getPage(), currentFilter)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                currentPage = it
+    override suspend fun supportStreamPosts() {
+        PostUseCase.convert(repository.getPage(), currentFilter)
+            .collectLatest {
                 view?.showStreamPosts(it)
             }
-        )
+
+//        disposables.add(PostUseCase.convert(repository.getPage(), currentFilter)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe {
+//                currentPage = it
+//                view?.showStreamPosts(it)
+//            }
+//        )
     }
 
     override fun destroy() {

@@ -5,15 +5,16 @@ import androidx.paging.map
 import com.example.basicphotoeditor.data.room.PostEntity
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class PostUseCase {
     companion object {
         fun convert(
-            posts: Flowable<PagingData<PostEntity>>,
+            posts: Flow<PagingData<PostEntity>>,
             filter: FilterTransformation.Filter
-        ): Flowable<PagingData<Post>> {
+        ): Flow<PagingData<Post>> {
             return posts
-                .observeOn(Schedulers.io())
                 .map { pager ->
                     pager.map { post ->
                         Post(post.id, post.image, filter, post.title, post.source)

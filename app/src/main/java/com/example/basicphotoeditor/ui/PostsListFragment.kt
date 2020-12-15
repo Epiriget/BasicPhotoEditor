@@ -1,13 +1,10 @@
 package com.example.basicphotoeditor.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -46,6 +43,11 @@ class PostsListFragment : Fragment(), PostListViewContract {
         fun getInstance(): PostsListFragment = PostsListFragment()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,7 +67,10 @@ class PostsListFragment : Fragment(), PostListViewContract {
 
         presenter = PostListPresenter(requireActivity().application)
         presenter.attachView(this)
-        presenter.supportStreamPosts()
+
+        lifecycleScope.launch {
+            presenter.supportStreamPosts()
+        }
 
         dispatchFilters()
 
@@ -91,7 +96,24 @@ class PostsListFragment : Fragment(), PostListViewContract {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_refresh -> {
+                lifecycleScope.launch {
+                    presenter.supportStreamPosts()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun showStreamPosts(posts: PagingData<Post>) {
+        Log.d("SomeTag", posts.toString())
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.submitData(posts)
         }
@@ -106,7 +128,7 @@ class PostsListFragment : Fragment(), PostListViewContract {
     }
 
     private fun updateFilter(filter: FilterTransformation.Filter) {
-        adapter.currentFilter = filter;
+        adapter.currentFilter = filter
         adapter.notifyDataSetChanged()
     }
 

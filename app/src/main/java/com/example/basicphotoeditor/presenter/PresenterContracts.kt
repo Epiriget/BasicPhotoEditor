@@ -11,6 +11,6 @@ interface PresenterContract<V> {
 }
 
 interface PostListPresenterContract: PresenterContract<PostListViewContract> {
-    fun supportStreamPosts()
+    suspend fun supportStreamPosts()
 }
 
